@@ -1,7 +1,6 @@
 # DNA Mutations API
 
 API Rest for validation of mutations in DNA samples taken.
-This API has two enpoints. The first one is a POST where a strings array is sent. 
 
 ## Table of contents
 
@@ -19,7 +18,7 @@ This API has two enpoints. The first one is a POST where a strings array is sent
   ```
   git clone https://gitlab.com/noris94/dna-mutations.git
   ```
-2. You need to have Node.JS v16.x or greater intalled in your computer
+2. You need to have Node.JS v16.x or greater installed in your computer
 
 3. To run locally this app you will need to configure a ```.env``` file in root directory. This file has to look like the following:
   ```
