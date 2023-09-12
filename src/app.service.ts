@@ -3,10 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
 
-  getStats(){
-
-  }
-
   hasMutation(dna:string[]):boolean{
     
     let same4ConsecutiveLettersCount = 0;
@@ -140,6 +136,14 @@ export class AppService {
     }
   
     return diagonales;
+  }
+
+  getId(dna:string[]){
+    let hash='';
+    dna.forEach(row=>{
+      hash+=row;
+    });
+    return hash;
   }
   
 }

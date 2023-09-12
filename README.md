@@ -1,73 +1,128 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# DNA Mutations API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API Rest for validation of mutations in DNA samples taken.
+This API has two enpoints. The first one is a POST where a strings array is sent. 
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of contents
 
-## Description
+1. [Previous requirements](#previous-requirements)
+2. [Installation](#installation)
+3. [Running the App](#running-the-app)
+4. [Endpoints](#endpoints)
+   - [POST /mutation](#post-mutation)
+   - [GET /stats](#get-stats)
+5. [Testing](#testing)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Previous requirements
+1. Clone this repository in your machine.
 
+  ```
+  git clone https://gitlab.com/noris94/dna-mutations.git
+  ```
+2. You need to have Node.JS v16.x or greater intalled in your computer
+
+3. To run locally this app you will need to configure a ```.env``` file in root directory. This file has to look like the following:
+  ```
+    ACCESS_KEY_ID_AWS=MY_ACCESS_KEY
+    SECRET_ACCESS_KEY_AWS=MY_SECRET_ACCESS_KEY
+```
+  *Note*: Due to sensible information, these access keys are not provided, you will have to contact the author to get your own credentials
 ## Installation
+ 
+To install all project dependecies just run the following command in terminal located in project root folder:
 
 ```bash
-$ yarn install
+ npm install
 ```
-
 ## Running the app
+After you have installed all dependencies you can run the app by any of these commands:
 
 ```bash
 # development
-$ yarn run start
+npm run start
 
 # watch mode
-$ yarn run start:dev
+npm run start:dev
 
-# production mode
-$ yarn run start:prod
 ```
 
-## Test
+## Endpoints
+
+#### Running locally
+When you start the application, it starts running in 
+- http://localhost:3000/
+
+#### Test the API in cloud
+This app is hosted in AWS and you can test it by the following URL:
+- https://0r0ed7230k.execute-api.us-east-1.amazonaws.com
+
+
+Now you can use `Postman` or another client of your preference to test the app.
+
+There are 2 endpoints to test:
+### POST /mutation
+- **Description:** Evaluates if a mutation exists given a DNA sequence.
+- **HTTP METHOD:** POST
+- **URL:** `/mutation`
+- **Body request example:**
+  ```
+    {
+      "dna":
+        [
+          "ATGCGA", 
+          "CAGTGC", 
+          "TTATGT", 
+          "AGAAGG", 
+          "CCCCTA", 
+          "TCACTG"
+        ]
+    }
+  ```
+- **Response example (200 OK)**:
+  ```
+  {
+    "hasMutations": true
+  }
+  ```
+- **Response example (403 FORBIDDEN)**:
+  ```
+  {
+    "hasMutations": false
+  }
+  ```
+- **Response example (409 CONFLICT)**:
+  ```
+  {
+    "message": "This DNA has already been saved before"
+  }
+  ```
+- **Response example (400 BAD REQUEST)**:
+  ```
+  {
+    "message": [
+        "Each string must have only A, T, C or G letters"
+    ],
+    "error": "Bad Request",
+    "statusCode": 400
+  }
+  ```
+
+### GET /stats
+- **Description:** Retrieves statistics about the DNA's sent to the API.
+- **HTTP METHOD:** GET
+- **URL:** `/stats`
+- **Response example (200 OK)**:
+  ```
+  {
+    "count_mutations": 8,
+    "count_no_mutation": 5,
+    "ratio": 1.6
+  }
+  ```
+## Testing
 
 ```bash
 # unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+npm run test
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
